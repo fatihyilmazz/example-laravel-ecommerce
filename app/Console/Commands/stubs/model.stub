@@ -1,0 +1,52 @@
+<?php
+
+namespace App;
+
+use App\Scopes\ActiveScope;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Traits\LogsActivity;
+
+class {{ model }} extends Model
+{
+    use SoftDeletes, LogsActivity;
+
+    protected $table = '{{ modelVariablePlural }}';
+
+    protected $guarded = [];
+
+    protected static $logName = '[{{ model }}]';
+
+    //TODO Specify the fields to logged
+    protected static $logAttributes = [];
+
+    protected static $recordEvents = ['created', 'updated', 'deleted'];
+
+    protected static $logOnlyDirty = true;
+
+    protected static $submitEmptyLogs = false;
+
+    /**
+     * @return string
+     */
+    public function editLink()
+    {
+        return route('admin.{{ modelVariablePlural }}.edit', ['{{ modelVariable }}' => $this->id]);
+    }
+
+    /**
+     * @return string
+     */
+    public function updateLink()
+    {
+        return route('admin.{{ modelVariablePlural }}.update', ['{{ modelVariable }}' => $this->id]);
+    }
+
+    /**
+     * @return string
+     */
+    public function deleteLink()
+    {
+        return route('admin.{{ modelVariablePlural }}.destroy', ['{{ modelVariable }}' => $this->id]);
+    }
+}

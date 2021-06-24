@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Http\Requests\Admin\Content;
+
+use App\Facades\Setting;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class FilterPage extends FormRequest
+{
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'id'            => 'nullable|numeric',
+            'name'          => 'nullable|min:1|max:255',
+            'is_published'  => 'nullable|boolean',
+            'per_page' => [
+                Rule::in(
+                    explode(',', Setting::get('pagination_per_page_list', \App\Setting::PAGINATION_PER_PAGE_LIST))
+                )
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function attributes(): array
+    {
+        return [
+            'id'            => __('text.crud.id'),
+            'name'          => __('text.common.name'),
+            'is_published'  => __('text.crud.status'),
+            'per_page'      => __('text.common.item_number'),
+        ];
+    }
+}

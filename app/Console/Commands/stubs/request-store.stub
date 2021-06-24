@@ -1,0 +1,22 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class DummyClass extends FormRequest
+{
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'name' => 'bail|required|min:1|max:255',
+            'order' => 'nullable|digits_between:0,32767',
+            'is_active' => 'boolean',
+        ];
+    }
+}

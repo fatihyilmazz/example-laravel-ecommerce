@@ -1,0 +1,14 @@
+Route::prefix(LaravelLocalization::transRoute('routes.admin.{{ modelVariablePlural }}'))->group(function () {
+    Route::get('/', '{{ model }}Controller@index')
+        ->name('{{ modelVariablePlural }}.index')->middleware('permission:list-{{ modelVariablePlural }}');
+    Route::get(LaravelLocalization::transRoute('routes.common.create'), '{{ model }}Controller@create')
+        ->name('{{ modelVariablePlural }}.create')->middleware('permission:create-{{ modelVariablePlural }}');
+    Route::post('/', '{{ model }}Controller@store')
+        ->name('{{ modelVariablePlural }}.store')->middleware('permission:create-{{ modelVariablePlural }}');
+    Route::get(sprintf('%s%s', '/{{{ modelVariable }}}/', LaravelLocalization::transRoute('routes.common.edit')), '{{ model }}Controller@edit')->where('{{ modelVariable }}', '[0-9]+')
+        ->name('{{ modelVariablePlural }}.edit')->middleware('permission:update-{{ modelVariablePlural }}|view-{{ modelVariablePlural }}');
+    Route::put('/{{{ modelVariable }}}', '{{ model }}Controller@update')->where('{{ modelVariable }}', '[0-9]+')
+        ->name('{{ modelVariablePlural }}.update')->middleware('permission:update-{{ modelVariablePlural }}');
+    Route::delete('/{{{ modelVariable }}}', '{{ model }}Controller@destroy')->where('{{ modelVariable }}', '[0-9]+')
+        ->name('{{ modelVariablePlural }}.destroy')->middleware('permission:delete-{{ modelVariablePlural }}');
+});

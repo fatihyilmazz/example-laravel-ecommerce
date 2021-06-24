@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Providers;
+
+use App\{{ model }};
+use App\Repositories\{{ model }}Repository;
+use App\Services\{{ model }}Service;
+use Illuminate\Support\ServiceProvider;
+
+class {{ model }}ServiceProvider extends ServiceProvider
+{
+    /**
+     * Register services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->singleton({{ model }}Service::class, function () {
+            return new {{ model }}Service(new {{ model }}Repository(new {{ model }}()));
+        });
+    }
+}

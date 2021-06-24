@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Facades\Setting;
+use {{ namespacedModel }};
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+class {{ class }} extends BaseRepository
+{
+    /**
+     * @var \{{ namespacedModel }}
+     */
+    protected $model;
+
+    /**
+     * {{ model }}Repository constructor.
+     * @param \{{ namespacedModel }} ${{ modelVariable }}
+     */
+    public function __construct({{ model }} ${{ modelVariable }})
+    {
+        parent::__construct(${{ modelVariable }});
+
+        $this->model = ${{ modelVariable }};
+    }
+
+    /**
+     * @param Request $request
+    * @param \{{ namespacedModel }} ${{ modelVariable }}
+     * @return LengthAwarePaginator
+     */
+    public function get{{ modelPlural }}ByFilter(Request $request, {{ model }} ${{ modelVariable }})
+    {
+        ${{ modelVariable }} = ${{ modelVariable }}->newQuery();
+
+        if ($request->has('id') && !empty($request->request->getInt('id'))) {
+            ${{ modelVariable }}->where('id', $request->request->getInt('id'));
+        }
+
+        if ($request->has('name') && !empty($request->request->get('name'))) {
+            ${{ modelVariable }}->where('name', 'LIKE',  "%{$request->request->get('name')}%");
+        }
+
+        if ($request->has('order') && !empty($request->request->getInt('order'))) {
+            ${{ modelVariable }}->where('order', $request->request->getInt('order'));
+        }
+
+        if ($request->has('is_active') && !empty($request->request->getBoolean('is_active'))) {
+            ${{ modelVariable }}->where('is_active', $request->request->getBoolean('is_active'));
+        }
+
+        $total = !empty($request->all()) ? ${{ modelVariable }}->count() : {{ model }}::count();
+
+        ${{ modelVariable }}->paginate($request->has('per_page') ? $request->request->getInt('per_page') : Setting::get('pagination_item_per_page', \App\Setting::PAGINATION_ITEM_PER_PAGE));
+
+        $paginator = new LengthAwarePaginator(${{ modelVariable }}->get(), $total,
+            ($request->has('per_page') ? $request->request->getInt('per_page') : $this->defaultPerPage), 0);
+
+        $paginator->setPath(route('admin.{{ modelVariablePlural }}.index'));
+        $paginator->setPageName(__('text.common.page'));
+
+        return $paginator;
+    }
+}
